@@ -159,3 +159,13 @@ class SerializedModelCacheWithIndexes(SerializedModelCache):
     def set_data(self, instance, data, key_suffix=''):
         super().set_data(instance, data, key_suffix=key_suffix)
         self.set_indexes(instance)
+
+    def delete(self, instance, key_suffix=''):
+        for index_key in self.get_index_keys(instance):
+            self.cache.delete(index_key)
+
+        return super().delete(instance, key_suffix=key_suffix)
+
+    def delete_index(self, index_name, index_value):
+        index_key = self.make_index_key(index_name, index_value)
+        self.cache.delete(index_key)
